@@ -15,11 +15,6 @@ iterations = $EF
     .byte $00
 .endrep
 
-ldx #$89
-stx $17
-dex
-stx $18
-
 mainLoop:
 
         ldx #$17
