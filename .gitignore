@@ -1,0 +1,6 @@
+*.dbg
+*.lbl
+*.lst
+*.nes
+*.o
+target
