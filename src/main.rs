@@ -1,6 +1,10 @@
-mod rng;
 mod emu;
+mod rng;
+mod pace;
 
 fn main() {
-    println!("{:#?}", rng::generate_blocks(0x8889, 0));
+    pace::ppl();
+    for i in 1..23 {
+        i * 10
+    }
 }
