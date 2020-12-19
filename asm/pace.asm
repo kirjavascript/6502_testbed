@@ -59,24 +59,16 @@ main:
 
         jsr unsigned_div24
 
-        ; lda dividend
-        ; sta target
-
-        ; lda dividend+1
-        ; sta target+1
-
-        ; lda dividend+2
-        ; sta target+2
-
         ; result in dividend, copy as first factor
 
         lda dividend+1
         sta factorA24
-        lda #0
+        lda dividend+2
         sta factorA24+1
+        lda #0
         sta factorA24+2
 
-        ; ; pace target multiplier as other factor
+        ; pace target multiplier as other factor
 
         lda #$5C
         sta factorB24
@@ -87,8 +79,42 @@ main:
 
         jsr unsigned_mul24
 
+        ; additional target data now in product24
+
+        ; we take the high bytes, so round the low one
+
         lda product24+0
-        sta target
+        cmp #$80
+        bcc @noRounding
+
+        clc
+        lda product24+1
+        adc #1
+        sta product24+1
+
+        lda product24+2
+        adc #0 ; this load/add/load has an effect if the carry flag is set
+        sta product24+2
+
+
+@noRounding:
+
+        ; add the base target value to the additional target amount
+
+        clc
+        lda product24+1
+        adc #$A0
+        sta product24
+        lda product24+2
+        adc #$0F
+        sta product24+1
+        lda #0
+        adc #0
+        sta product24+2
+
+
+        lda product24+0
+        sta target+0
         lda product24+1
         sta target+1
         lda product24+2
