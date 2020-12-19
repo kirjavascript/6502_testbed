@@ -1,7 +1,5 @@
 lines := $10
 target := $20
-numerator := $30
-denominator := $40
 
 paceRAM := $60 ; $12 bytes
 binary32 := paceRAM+$0
@@ -11,9 +9,27 @@ product24 := paceRAM+$9
 factorA24 := paceRAM+$C
 factorB24 := paceRAM+$F
 binaryTemp := paceRAM+$C
+
+dividend := paceRAM+$4
+divisor := paceRAM+$7
+remainder := paceRAM+$A
+pztemp := paceRAM+$D
+
 sign := paceRAM+$F
 
+
 marker := $EF
+
+; t = 110
+; for(i=10;i<=230;i+=10) {
+;     if (i <= t) {
+;         p = 4000;
+;     } else {
+;         p = 4000 + (((i-t) / (230-t)) * 348 )
+;     }
+;     console.log(`${i} lines - ${0|p * i} points ${0|p}`)
+
+; }
 
 
 ; target = p <= 100 ? 4000 : 4000 + ((lines - 110) / (230 - 110)) * 348
@@ -23,12 +39,60 @@ lineTargetThreshold := 110
 main:
         ldy #0
         lda lines
-        cmp #lineTargetThreshold
+        cmp #lineTargetThreshold+1
         bcc @baseTarget
 
-        sbc #lineTargetThreshold ; denominator
-        sta numerator
+        sbc #lineTargetThreshold
 
+        ; store the value as if multiplied by 100
+        sta dividend+2
+        lda #0
+        sta dividend
+        sta dividend+1
+
+        ; / (230 - 110)
+        lda #120
+        sta divisor
+        lda #0
+        sta divisor+1
+        sta divisor+2
+
+        jsr unsigned_div24
+
+        ; lda dividend
+        ; sta target
+
+        ; lda dividend+1
+        ; sta target+1
+
+        ; lda dividend+2
+        ; sta target+2
+
+        ; result in dividend, copy as first factor
+
+        lda dividend+1
+        sta factorA24
+        lda #0
+        sta factorA24+1
+        sta factorA24+2
+
+        ; ; pace target multiplier as other factor
+
+        lda #$5C
+        sta factorB24
+        lda #$01
+        sta factorB24+1
+        lda #0
+        sta factorB24+2
+
+        jsr unsigned_mul24
+
+        lda product24+0
+        sta target
+        lda product24+1
+        sta target+1
+        lda product24+2
+        sta target+2
 
         jmp @done
 
@@ -45,7 +109,7 @@ main:
 
 targetTable:
         .byte $A0,$0F
-        .byte $FC,$10
+        .byte $5C,$01
 
 unsigned_mul24:
 	lda #$00			; set product to zero
@@ -88,3 +152,39 @@ unsigned_mul24:
 	ror factorB24
 
 	jmp @loop			; end while
+
+unsigned_div24:
+        lda #0	        ;preset remainder to 0
+	sta remainder
+	sta remainder+1
+	sta remainder+2
+	ldx #24	        ;repeat for each bit: ...
+
+@divloop:
+        asl dividend	;dividend lb & hb*2, msb -> Carry
+	rol dividend+1
+	rol dividend+2
+	rol remainder	;remainder lb & hb * 2 + msb from carry
+	rol remainder+1
+	rol remainder+2
+	lda remainder
+	sec
+	sbc divisor	;substract divisor to see if it fits in
+	tay	        ;lb result -> Y, for we may need it later
+	lda remainder+1
+	sbc divisor+1
+	sta pztemp
+	lda remainder+2
+	sbc divisor+2
+	bcc @skip	;if carry=0 then divisor didn't fit in yet
+
+	sta remainder+2	;else save substraction result as new remainder,
+	lda pztemp
+	sta remainder+1
+	sty remainder
+	inc dividend 	;and INCrement result cause divisor fit in 1 times
+
+@skip:
+        dex
+	bne @divloop
+	rts

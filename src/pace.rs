@@ -15,16 +15,19 @@ pub fn ppl(lines: u8) {
 
     }
 
-    println!("{} lines {} PPL", lines, (
-        ((ram.read(0x21) as usize) << 8)
-        + ram.read(0x20) as usize
-    ));
+    let out = ((ram.read(0x21) as usize) << 8)
+        + ram.read(0x20) as usize;
+
+    println!("{} lines {} PPL", lines, out);
+    println!("{:x} {:x} {:x}",
+        ram.read(0x20),
+        ram.read(0x21),
+        ram.read(0x22),
+    );
 }
 
 pub fn dump_ppl() {
-    ppl(10);
-
-    // for i in 1..23 {
-    //     i * 10
-    // }
+    for i in 1..=23 {
+        ppl(i*10);
+    }
 }
