@@ -18,12 +18,12 @@ pub fn ppl(lines: u8) {
     let out = ((ram.read(0x21) as usize) << 8)
         + ram.read(0x20) as usize;
 
-    println!("{} lines {} PPL", lines, out);
-    println!("{:x} {:x} {:x}",
-        ram.read(0x20),
-        ram.read(0x21),
-        ram.read(0x22),
-    );
+    println!("{} lines {} PPL target {}", lines, out, out * lines as usize);
+    // println!("{:x} {:x} {:x}",
+    //     ram.read(0x20),
+    //     ram.read(0x21),
+    //     ram.read(0x22),
+    // );
 }
 
 pub fn dump_ppl() {

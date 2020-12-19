@@ -31,13 +31,11 @@ marker := $EF
 
 ; }
 
-
 ; target = p <= 100 ? 4000 : 4000 + ((lines - 110) / (230 - 110)) * 348
 
 lineTargetThreshold := 110
 
 main:
-        ldy #0
         lda lines
         cmp #lineTargetThreshold+1
         bcc @baseTarget
@@ -101,12 +99,13 @@ main:
 
         ; add the base target value to the additional target amount
 
+        ldx #0
         clc
         lda product24+1
-        adc #$A0
+        adc targetTable, x
         sta product24
         lda product24+2
-        adc #$0F
+        adc targetTable+1, x
         sta product24+1
         lda #0
         adc #0
@@ -123,9 +122,10 @@ main:
         jmp @done
 
 @baseTarget:
-        lda targetTable, y
+        ldx #0
+        lda targetTable, x
         sta target
-        lda targetTable+1, y
+        lda targetTable+1, x
         sta target+1
 @done:
 
