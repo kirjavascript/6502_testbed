@@ -5,15 +5,14 @@ mod emu;
 fn main() {
 
     for score in 0..50 {
-        pushdown(14, score);
+        pushdown(23, score);
     }
 
 }
 
 fn _pushdown(pushdown: u8, score: u8) -> u8 {
-    if pushdown > 7 && pushdown < 17 {
-        let offset = score % 10;
-        if offset > 10 - (pushdown - 6) {
+    if pushdown > 7 {
+        if pushdown > 16 || score % 10 > 10 - (pushdown - 6) {
             return pushdown - 7
         }
     }
