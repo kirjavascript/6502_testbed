@@ -21,26 +21,26 @@ impl Block {
     }
 }
 
-fn _find_seed() {
+pub fn _find_seed() {
     use Block::*;
+    let mut top = 0;
+
     // search for seed
-    let ctwc = vec![Z,L,O,L,I,O,S,T,L,Z];
-    for seed in 0x1ca2..0x10000 {
+    for seed in 0x1..0x10000 {
         for count in 0..256 {
-            let b = generate_blocks(seed, count);
-            for i in 0..b.len() {
-                if i < 1000 && ctwc[0] == b[i] {
-                    if &b[i..i+ctwc.len()] == &ctwc[..ctwc.len()] {
-                        panic!("seed: {:x} index: {}", seed, i);
-                    }
-                }
+            let b = generate_blocks(seed, count * 10, 10);
+            let ocount = b.iter().filter(|&n| n == &O).count();
+            if ocount > top {
+                top = ocount;
+                println!("seed: {:x} count: {:x} O: {}", seed, count * 10, ocount);
             }
+
         }
-        println!("checking seed {:x}", seed);
+
     }
 }
 
-pub fn generate_blocks(seed: usize, spawn_count: usize) -> Vec<Block> {
+pub fn generate_blocks(seed: usize, spawn_count: usize, quantity: usize) -> Vec<Block> {
     let mut blocks = Vec::new();
 
     let (mut cpu, mut ram) = emu::load();
@@ -69,7 +69,7 @@ pub fn generate_blocks(seed: usize, spawn_count: usize) -> Vec<Block> {
             blocks.push(Block::from(ram.read(0xBF)));
         }
 
-        if blocks.len() > 1024 {
+        if blocks.len() >= quantity {
             break;
         }
     }

@@ -7,7 +7,7 @@
     .byte $00
 .endrep
 
-; .include "rng.asm"
-.include "pace.asm"
+.include "rng.asm"
+; .include "pace.asm"
 
 .code

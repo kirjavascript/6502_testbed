@@ -17,21 +17,7 @@ pztemp := paceRAM+$D
 
 sign := paceRAM+$F
 
-
 marker := $EF
-
-; t = 110
-; for(i=10;i<=230;i+=10) {
-;     if (i <= t) {
-;         p = 4000;
-;     } else {
-;         p = 4000 + (((i-t) / (230-t)) * 348 )
-;     }
-;     console.log(`${i} lines - ${0|p * i} points ${0|p}`)
-
-; }
-
-; target = p <= 100 ? 4000 : 4000 + ((lines - 110) / (230 - 110)) * 348
 
 lineTargetThreshold := 110
 
