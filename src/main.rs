@@ -4,9 +4,7 @@ mod emu;
 
 fn main() {
 
-    // TODO: handle BCD
     for score in 0..50 {
-
         pushdown(0xC, score);
     }
 
@@ -14,6 +12,9 @@ fn main() {
 
 fn dec_bcd(val: u8) -> u8 {
     (val/10*16) + (val%10)
+}
+fn bcd_dec(val: u8) -> u8 {
+   (val/16*10) + (val%16)
 }
 
 fn pushdown(pushdown: u8, score: u8) {
@@ -34,11 +35,14 @@ fn pushdown(pushdown: u8, score: u8) {
         }
     }
 
+    let added = format!("{:x}", ram.read(0x02)).parse::<u8>().unwrap() - score;
 
-    println!("pdp {} s0: {}-{:x} high {:x} low {:x}",
+    // adjuted pushdown
+    println!("PDP {} Added PDP {} start score {}:{} end score {:x}:{:x} ",
         ram.read(0x01),
+        added,
         score,
-        score,
+        dec_bcd(score),
         ram.read(0x03),
         ram.read(0x02),
     );
