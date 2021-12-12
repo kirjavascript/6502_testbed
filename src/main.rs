@@ -5,9 +5,20 @@ mod emu;
 fn main() {
 
     for score in 0..50 {
-        pushdown(0xC, score);
+        pushdown(14, score);
     }
 
+}
+
+fn _pushdown(pushdown: u8, score: u8) -> u8 {
+    if pushdown > 7 && pushdown < 17 {
+        let offset = score % 10;
+        if offset > 10 - (pushdown - 6) {
+            return pushdown - 7
+        }
+    }
+
+    pushdown - 1
 }
 
 fn dec_bcd(val: u8) -> u8 {
@@ -37,14 +48,24 @@ fn pushdown(pushdown: u8, score: u8) {
 
     let added = format!("{:x}", ram.read(0x02)).parse::<u8>().unwrap() - score;
 
-    // adjuted pushdown
-    println!("PDP {} Added PDP {} start score {}:{} end score {:x}:{:x} ",
+    print!("score {} PDP {} Actual PDP {}",
+        score,
         ram.read(0x01),
         added,
-        score,
-        dec_bcd(score),
-        ram.read(0x03),
-        ram.read(0x02),
     );
+    println!(" -- score {} PDP {} Actual PDP {}",
+        score,
+        ram.read(0x01),
+        _pushdown(ram.read(0x01), score),
+    );
+
+    // println!("PDP {} Added PDP {} start score {}:{} end score {:x}:{:x} ",
+    //     ram.read(0x01),
+    //     added,
+    //     score,
+    //     dec_bcd(score),
+    //     ram.read(0x03),
+    //     ram.read(0x02),
+    // );
 
 }
