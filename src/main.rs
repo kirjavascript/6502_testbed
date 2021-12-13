@@ -4,18 +4,34 @@ mod emu;
 
 fn main() {
 
-    for score in 0..105 {
-        pushdown(13, score);
+    for pdp in 20..26 {
+        for score in 0..9500 {
+            pushdown(pdp, score);
+        }
     }
 
 }
 
 fn _pushdown(pushdown: u8, score: u16) -> u16 {
     let mut newscore = (score % 10) as u8 + (pushdown - 1);
-    if newscore & 0b1111 > 9 {
+    if newscore & 0xF > 9 {
         newscore += 6;
     }
-    ((newscore & 0b11110000) / 16 * 10) as u16 + (newscore & 0b1111) as u16 + (score - (score % 10))
+
+    let low = (newscore & 0xF) as u16;
+    let high = ((newscore & 0xF0) / 16 * 10) as u16;
+
+    let mut newscore = (
+        high
+        + low
+        + ((score%100)-(score%10))
+    );
+
+    if newscore > 100 {
+        newscore = (newscore - low);
+    }
+
+     newscore   + (score-score%100)
 }
 
 // fn _pushdown(pushdown: u8, score: u8) -> u8 {
@@ -57,28 +73,34 @@ fn pushdown(pushdown: u8, score: u16) {
         }
     }
     let bcd = format!("{:02x}{:02x}", ram.read(0x03), ram.read(0x02));
-    let newScore = bcd.parse::<u16>().unwrap();
+    let newScore = bcd.parse::<u16>().unwrap_or_else(|e| {
+        println!("{:#?} {} {}", bcd, score, pushdown);
+        0
+    });
 
 
     let added = if newScore >= score {
         format!("{}", newScore - score)
     } else {
-        format!("{} {}", newScore, score)
+        format!("ERROR")
     };
+
+    let fnadded = _pushdown(ram.read(0x01), score) - score;
+    assert_eq!(newScore - score, fnadded);
 
 
     // print!("{}", bcd);
 
-    print!("score {} PDP {} Actual PDP {}",
-        score,
-        ram.read(0x01),
-        added,
-    );
-    println!(" -- score {} PDP {} Actual PDP {}",
-        score,
-        ram.read(0x01),
-        _pushdown(ram.read(0x01), score) - score,
-    );
+    // print!("score {} PDP {} Actual PDP {}",
+    //     score,
+    //     ram.read(0x01),
+    //     added,
+    // );
+    // println!(" -- score {} PDP {} Actual PDP {}",
+    //     score,
+    //     ram.read(0x01),
+    //     _pushdown(ram.read(0x01), score) - score,
+    // );
 
     // println!("PDP {} Added PDP {} start score {}:{} end score {:x}:{:x} ",
     //     ram.read(0x01),

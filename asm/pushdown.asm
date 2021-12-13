@@ -27,5 +27,15 @@ main:
         inc     score+1                         ; 9C25
 @noHighOverflow:
 
+        lda     score+1                         ; 9C55
+        and     #$0F                            ; 9C57
+        cmp     #$0A                            ; 9C59
+        bcc     @noScore1LowOverlow             ; 9C5B
+        lda     score+1                         ; 9C5D
+        clc                                     ; 9C5F
+        adc     #$06                            ; 9C60
+        sta     score+1                         ; 9C62
+@noScore1LowOverlow:
+
         lda #$FF
         sta marker
