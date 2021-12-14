@@ -4,11 +4,11 @@ mod emu;
 
 fn main() {
 
-    for pdp in 4..40 {
+    for pdp in 12..13 {
         println!("PDP {}", pdp);
-        for score in 0x9000..0x9100 {
+        for score in 0xE000..0xF000 {
             let refadded = pushdown_ref(pdp, score);
-            let asmadded = pushdown(pdp, score);
+            let asmadded = pushdown_new(pdp, score);
             assert_eq!(refadded, asmadded.unwrap());
 
             // println!("score {} PDP {} ASM PDP {} Ref PDP {}",
@@ -49,12 +49,14 @@ fn pushdown_new(pushdown: u8, score: u16) -> Option<u16> {
     let (mut cpu, mut ram) = emu::load();
 
     ram.write(0x01, pushdown); // pushdown
-    let bcd_str = format!("{:04}", score);
-    let bcd_high = i64::from_str_radix(&bcd_str[0..2], 16).unwrap();
-    let bcd_low = i64::from_str_radix(&bcd_str[2..4], 16).unwrap();
+    let bcd_str = format!("{:06}", score);
+    let bcd_a = i64::from_str_radix(&bcd_str[0..2], 16).unwrap();
+    let bcd_b = i64::from_str_radix(&bcd_str[2..4], 16).unwrap();
+    let bcd_c = i64::from_str_radix(&bcd_str[4..6], 16).unwrap();
 
-    ram.write(0x02, bcd_low as u8);
-    ram.write(0x03, bcd_high as u8);
+    ram.write(0x04, bcd_a as u8);
+    ram.write(0x03, bcd_b as u8);
+    ram.write(0x02, bcd_c as u8);
     ram.write(0x80, score as u8);
     ram.write(0x81, (score >> 8) as u8);
 
@@ -65,11 +67,7 @@ fn pushdown_new(pushdown: u8, score: u16) -> Option<u16> {
         }
     }
 
-    // return Some(ram.read(0x13) as u16);
-
     let next_score = ram.read(0x80) as u16 + ((ram.read(0x81) as u16) << 8);
-
-    // println!("{:02x}{:02x}", ram.read(0x81), ram.read(0x80));
 
     if next_score >= score {
         Some(next_score - score)
