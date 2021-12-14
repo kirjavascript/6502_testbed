@@ -11,7 +11,6 @@ high := buf+5
 binScore := $80
 
 main:
-        clc
         lda score
         and #$F
         sta ones
@@ -20,7 +19,7 @@ main:
 @modLoop:
         cmp #100
         bcc @modEnd
-        clc
+        sec
         sbc #100
         jmp @modLoop
 @modEnd:
@@ -45,10 +44,10 @@ main:
 
         lda pdptmp
         and #$f0
-        lsr
-        lsr
-        lsr
-        lsr
+        ror
+        ror
+        ror
+        ror
         tax
         lda multBy10Table,x
         sta high
