@@ -7,6 +7,6 @@
     .byte $00
 .endrep
 
-.include "pushdown_new.asm"
+.include "pushdown.asm"
 
 .code
