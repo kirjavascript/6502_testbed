@@ -28,6 +28,8 @@ fn pushdown_ref(pushdown: u8, score: u16) -> u16 {
         newscore += 6;
     }
 
+    // return newscore as u16;
+
     let low = (newscore & 0xF) as u16;
     let high = ((newscore & 0xF0) / 16 * 10) as u16;
 
@@ -37,6 +39,7 @@ fn pushdown_ref(pushdown: u8, score: u16) -> u16 {
     if nextscore <= 100 {
         newscore = nextscore;
     }
+    // return newscore;
 
     newscore + (score-hundredths) - score
 }
@@ -63,6 +66,7 @@ fn pushdown_new(pushdown: u8, score: u16) -> Option<u16> {
             break;
         }
     }
+    // return Some(ram.read(0x13) as u16);
     let next_score = ram.read(0x80);
 
 

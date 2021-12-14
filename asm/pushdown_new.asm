@@ -34,7 +34,7 @@ main:
         cmp #$A
         bcc @pdp2
         lda pdptmp
-        adc #6
+        adc #5
         sta pdptmp
 @pdp2:
 
@@ -54,20 +54,23 @@ main:
 
         lda hundredths
         sbc ones
+        sec
         adc high
         sta pdptmp
 
+        clc
         adc low
         cmp #101
         bcs @noLow
         sta pdptmp
 @noLow:
 
+        clc
         lda binScore
         sbc hundredths
+        sec
         adc pdptmp
         sta binScore
-        ; TODO
 
         lda #$FF
         sta marker
