@@ -15,14 +15,9 @@ main:
         and #$F
         sta ones
 
-        lda binScore
-@modLoop:
-        cmp #100
-        bcc @modEnd
-        sec
-        sbc #100
-        jmp @modLoop
-@modEnd:
+        lda score
+        jsr div16mul10
+        adc ones
         sta hundredths
 
         lda holdDownPoints
@@ -43,13 +38,7 @@ main:
         sta low
 
         lda pdptmp
-        and #$f0
-        ror
-        ror
-        ror
-        ror
-        tax
-        lda multBy10Table,x
+        jsr div16mul10
         sta high
 
         lda hundredths
@@ -65,15 +54,34 @@ main:
         sta pdptmp
 @noLow:
 
-        clc
+        sec
         lda binScore
         sbc hundredths
-        sec
+        sta binScore
+        lda binScore+1
+        sbc #0
+        sta binScore+1
+
+        clc
+        lda binScore
         adc pdptmp
         sta binScore
+        lda binScore+1
+        adc #0
+        sta binScore+1
 
         lda #$FF
         sta marker
+
+div16mul10:
+        and #$f0
+        ror
+        ror
+        ror
+        ror
+        tax
+        lda multBy10Table,x
+        rts
 
 multBy10Table:
         .byte   $00,$0A,$14,$1E,$28,$32,$3C,$46
