@@ -4,19 +4,19 @@ mod emu;
 
 fn main() {
 
-    for pdp in 12..13 {
+    for pdp in 9..10 {
         println!("PDP {}", pdp);
-        for score in 0xE000..0xF000 {
+        for score in 23569..23570 {
             let refadded = pushdown_ref(pdp, score);
             let asmadded = pushdown_new(pdp, score);
-            assert_eq!(refadded, asmadded.unwrap());
+            // assert_eq!(refadded, asmadded.unwrap());
 
-            // println!("score {} PDP {} ASM PDP {} Ref PDP {}",
-            //     score,
-            //     pdp,
-            //     asmadded.expect("asm fail"),
-            //     refadded,
-            // );
+            println!("score {} PDP {} ASM PDP {} Ref PDP {}",
+                score,
+                pdp,
+                asmadded.expect("asm fail"),
+                refadded,
+            );
         }
     }
 }
