@@ -7,6 +7,6 @@
     .byte $00
 .endrep
 
-.include "score_bcd.asm"
+.include "score_bin.asm"
 
 .code

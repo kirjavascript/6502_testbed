@@ -22,8 +22,7 @@ fn main() {
 
     for level in 0..255 {
         print!("{}: ", level);
-        // score_binary(4, level, 0, 0);
-        score_bcd(4, level, 0, 0);
+        score_binary(4, level, 0, 0);
     }
 }
 
