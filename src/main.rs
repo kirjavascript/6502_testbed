@@ -4,20 +4,26 @@ mod emu;
 
 fn main() {
 
-    for pdp in 9..10 {
-        println!("PDP {}", pdp);
-        for score in 23569..23570 {
-            let refadded = pushdown_ref(pdp, score);
-            let asmadded = pushdown_new(pdp, score);
-            // assert_eq!(refadded, asmadded.unwrap());
+    // for pdp in 9..10 {
+    //     println!("PDP {}", pdp);
+    //     for score in 23569..23570 {
+    //         let refadded = pushdown_ref(pdp, score);
+    //         let asmadded = score_binary(0, 0, pdp, score);
+    //         assert_eq!(refadded, asmadded.unwrap());
 
-            println!("score {} PDP {} ASM PDP {} Ref PDP {}",
-                score,
-                pdp,
-                asmadded.expect("asm fail"),
-                refadded,
-            );
-        }
+    //         println!("score {} PDP {} ASM PDP {} Ref PDP {}",
+    //             score,
+    //             pdp,
+    //             asmadded.expect("asm fail"),
+    //             refadded,
+    //         );
+    //     }
+    // }
+
+    for level in 0..255 {
+        print!("{}: ", level);
+        // score_binary(4, level, 0, 0);
+        score_bcd(4, level, 0, 0);
     }
 }
 
@@ -42,7 +48,9 @@ fn pushdown_ref(pushdown: u8, score: u16) -> u16 {
     newscore + (score-hundredths) - score
 }
 
-fn pushdown_new(pushdown: u8, score: u16) -> Option<u16> {
+// graph: crash line
+
+fn score_binary(lines: u8, level: u8, pushdown: u8, score: u16) -> Option<u16> {
 
     use emulator_6502::Interface6502;
 
@@ -60,12 +68,21 @@ fn pushdown_new(pushdown: u8, score: u16) -> Option<u16> {
     ram.write(0x80, score as u8);
     ram.write(0x81, (score >> 8) as u8);
 
+    ram.write(0x200, lines);
+    ram.write(0x201, level);
+
+    let mut i = 0;
+
     loop {
-        cpu.execute_instruction(&mut ram);
+        // cpu.execute_instruction(&mut ram);
+        cpu.cycle(&mut ram);
+        i += 1;
         if ram.read(0xEF) == 0xFF {
             break;
         }
     }
+
+    println!("{:#?}", i);
 
     let next_score = ram.read(0x80) as u16 + ((ram.read(0x81) as u16) << 8);
 
@@ -76,7 +93,7 @@ fn pushdown_new(pushdown: u8, score: u16) -> Option<u16> {
     }
 }
 
-fn pushdown(pushdown: u8, score: u16) -> Option<u16> {
+fn score_bcd(lines: u8, level: u8, pushdown: u8, score: u16) -> Option<u16> {
 
     use emulator_6502::Interface6502;
 
@@ -92,19 +109,30 @@ fn pushdown(pushdown: u8, score: u16) -> Option<u16> {
     ram.write(0x03, bcd_b as u8);
     ram.write(0x02, bcd_c as u8);
 
+    ram.write(0x200, lines);
+    ram.write(0x201, level);
+
+    let mut i = 0;
+
     loop {
-        cpu.execute_instruction(&mut ram);
+        // cpu.execute_instruction(&mut ram);
+
+        cpu.cycle(&mut ram);
+        i += 1;
 
         if ram.read(0xEF) == 0xFF {
             break;
         }
     }
+
+    println!("{:#?},", i);
+
     let bcd = format!("{:02x}{:02x}{:02x}", ram.read(0x04), ram.read(0x03), ram.read(0x02));
 
-    let next_score = bcd.parse::<u16>().unwrap_or_else(|e| {
+    let next_score = bcd.parse::<u32>().unwrap_or_else(|e| {
         println!("{:#?} {} {}", bcd, score, pushdown);
         0
-    });
+    }) as u16;
 
     if next_score >= score {
         Some(next_score - score)

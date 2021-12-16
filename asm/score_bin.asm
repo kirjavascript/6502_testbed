@@ -10,12 +10,20 @@ low := buf+4
 high := buf+5
 binScore := $80
 
-main:
-        lda #0
-        sta completedLines
-        lda #18
-        sta levelNumber
+completedLines :=$200
+levelNumber :=$201
 
+scr := $90
+product24 := scr
+factorB24 := scr+3
+factorA24 := scr+6
+binary32 := scr+9
+bcd32 := scr+13
+exp := scr+16
+
+bigScore := scr+25
+
+main:
         clc
         lda score
         and #$F
@@ -88,7 +96,7 @@ main:
         adc #0
         sta binScore+3
 
-        ; jsr addLineClearPoints
+        jsr addLineClearPoints
 
         lda #$FF
         sta marker
@@ -102,18 +110,6 @@ div16mul10:
         tax
         lda multBy10Table,x
         rts
-
-scr := $90
-product24 := scr
-factorB24 := scr+3
-factorA24 := scr+6
-binary32 := scr+9
-bcd32 := scr+13
-exp := scr+16
-completedLines :=scr+18
-levelNumber :=scr+19
-
-bigScore := scr+25
 
 addLineClearPoints:
         lda #0
@@ -156,15 +152,15 @@ addLineClearPoints:
         ; sta     completedLines
         ; inc     playState
 
-        lda binScore
-        sta binary32
-        lda binScore+1
-        sta binary32+1
-        lda binScore+2
-        sta binary32+2
-        lda binScore+3
-        sta binary32+3
-        jsr hex2dec
+        ; lda binScore
+        ; sta binary32
+        ; lda binScore+1
+        ; sta binary32+1
+        ; lda binScore+2
+        ; sta binary32+2
+        ; lda binScore+3
+        ; sta binary32+3
+        ; jsr hex2dec
 
         lda binScore
         sta binary32

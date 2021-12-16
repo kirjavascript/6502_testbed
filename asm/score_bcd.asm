@@ -1,7 +1,9 @@
 marker := $EF
 holdDownPoints := $01
 score := $02 ; $03
-dummy_0 := $10
+
+completedLines :=$200
+levelNumber :=$201
 
 
 main:
@@ -41,11 +43,11 @@ main:
 @addLineClearPoints:
         lda     #$00                            ; 9C2D
         sta     holdDownPoints                  ; 9C2F
-        lda     dummy_0 ; levelNumber                    ; 9C31
+        lda     levelNumber                    ; 9C31
         sta     $11                  ; 9C33
         inc     $11                  ; 9C35
 @levelLoop:
-        lda     dummy_0 ;completedLines                  ; 9C37
+        lda     completedLines                  ; 9C37
         asl     a                               ; 9C39
         tax                                     ; 9C3A
         lda     pointsTable,x                   ; 9C3B
