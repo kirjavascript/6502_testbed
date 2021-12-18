@@ -24,77 +24,77 @@ exp := scr+16
 bigScore := scr+25
 
 main:
-        clc
-        lda score
-        and #$F
-        sta ones
+        ; clc
+        ; lda score
+        ; and #$F
+        ; sta ones
 
-        lda score
-        jsr div16mul10
-        adc ones
-        sta hundredths
+        ; lda score
+        ; jsr div16mul10
+        ; adc ones
+        ; sta hundredths
 
-        lda holdDownPoints
-        sbc #1
-        adc ones
-        sta pdptmp
+        ; lda holdDownPoints
+        ; sbc #1
+        ; adc ones
+        ; sta pdptmp
 
-        and #$F
-        cmp #$A
-        bcc @pdp2
-        lda pdptmp
-        adc #5
-        sta pdptmp
-@pdp2:
+        ; and #$F
+        ; cmp #$A
+        ; bcc @pdp2
+        ; lda pdptmp
+        ; adc #5
+        ; sta pdptmp
+; @pdp2:
 
-        lda pdptmp
-        and #$f
-        sta low
+        ; lda pdptmp
+        ; and #$f
+        ; sta low
 
-        lda pdptmp
-        jsr div16mul10
-        sta high
+        ; lda pdptmp
+        ; jsr div16mul10
+        ; sta high
 
-        lda hundredths
-        sbc ones
-        sec
-        adc high
-        sta pdptmp
+        ; lda hundredths
+        ; sbc ones
+        ; sec
+        ; adc high
+        ; sta pdptmp
 
-        clc
-        adc low
-        cmp #101
-        bcs @noLow
-        sta pdptmp
-@noLow:
+        ; clc
+        ; adc low
+        ; cmp #101
+        ; bcs @noLow
+        ; sta pdptmp
+; @noLow:
 
-        sec
-        lda binScore
-        sbc hundredths
-        sta binScore
-        lda binScore+1
-        sbc #0
-        sta binScore+1
-        lda binScore+2
-        sbc #0
-        sta binScore+2
-        lda binScore+3
-        sbc #0
-        sta binScore+3
+        ; sec
+        ; lda binScore
+        ; sbc hundredths
+        ; sta binScore
+        ; lda binScore+1
+        ; sbc #0
+        ; sta binScore+1
+        ; lda binScore+2
+        ; sbc #0
+        ; sta binScore+2
+        ; lda binScore+3
+        ; sbc #0
+        ; sta binScore+3
 
-        clc
-        lda binScore
-        adc pdptmp
-        sta binScore
-        lda binScore+1
-        adc #0
-        sta binScore+1
-        lda binScore+2
-        adc #0
-        sta binScore+2
-        lda binScore+3
-        adc #0
-        sta binScore+3
+        ; clc
+        ; lda binScore
+        ; adc pdptmp
+        ; sta binScore
+        ; lda binScore+1
+        ; adc #0
+        ; sta binScore+1
+        ; lda binScore+2
+        ; adc #0
+        ; sta binScore+2
+        ; lda binScore+3
+        ; adc #0
+        ; sta binScore+3
 
         jsr addLineClearPoints
 

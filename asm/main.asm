@@ -7,6 +7,6 @@
     .byte $00
 .endrep
 
-.include "score_bin.asm"
+.include "btypeinit.asm"
 
 .code
