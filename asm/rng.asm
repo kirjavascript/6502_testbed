@@ -7,6 +7,17 @@ spawnCount = $1A
 nextPiece = $00BF
 iterations = $EF
 
+; rng_seed = 0x8988
+; spawnCount = 0
+; nextPiece = 0
+
+; run generateNextPseudorandomNumber and pickRandomTetrimino 81 times
+
+; 0x17: 4C
+; 0x18: 00
+; 0x19: 0e
+
+
 mainLoop:
 
         ldx #$17

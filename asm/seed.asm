@@ -10,6 +10,24 @@ mainLoop:
         ldy #$02
         jsr generateNextPseudorandomNumber
 
+
+; @chooseRandomHole_player1:
+;         ldx     #$17
+;         ldy     #$02
+;         jsr     generateNextPseudorandomNumber
+;         lda     rng_seed
+;         and     #$0F
+;         cmp     #$0A
+;         bpl     @chooseRandomHole_player1
+; @chooseRandomHole_player2:
+;         ldx     #$17
+;         ldy     #$02
+;         jsr     generateNextPseudorandomNumber
+;         lda     rng_seed
+;         and     #$0F
+;         cmp     #$0A
+;         bpl     @chooseRandomHole_player2
+
         lda #$FF
         sta marker
 

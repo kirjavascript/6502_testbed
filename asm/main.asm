@@ -7,6 +7,6 @@
     .byte $00
 .endrep
 
-.include "btypeinit.asm"
+.include "rng.asm"
 
 .code

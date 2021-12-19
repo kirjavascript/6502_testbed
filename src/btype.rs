@@ -1,7 +1,7 @@
 use super::emu;
 
 pub fn test() {
-    let seeds = include_str!("./../validseeds.txt");
+    let seeds = include_str!("./../validseeds_levelselect.txt");
     let seeds: Vec<u16> = seeds.trim().split(",").map(|x| x.parse::<u16>().unwrap()).collect();
 
     let mut empty = 0;
@@ -12,6 +12,7 @@ pub fn test() {
         }
     }
     println!("found {} seeds with empty top rows", empty);
+    println!("{:#?}", seeds.len());
 }
 
 fn btype(height: u8, drawheight: Option<u8>, seed: u16) -> bool {

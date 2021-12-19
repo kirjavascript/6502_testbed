@@ -45,8 +45,15 @@ pub fn test() {
 
     }
 
+    // println!("{:#?}", seeds.len());
+
+    let st = vec![0x02,0x07,0x08,0x0A,0x0B,0x0E,0x12    ];
     for d in seeds.iter() {
-        print!("{},", d);
+        if d >> 8 == 0x4c {
+            for t in st.iter() {
+                println!("${:02x}{:02x}", d & 0xFF, t);
+            }
+        }
 
     }
 
