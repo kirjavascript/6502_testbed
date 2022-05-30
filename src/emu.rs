@@ -1,7 +1,5 @@
 use emulator_6502::{MOS6502, Interface6502};
 
-static PRG: &[u8; 32768] = include_bytes!("./../asm/main.nes");
-
 pub struct Ram {
     ram: Box<[u8; u16::max_value() as usize + 1]> //The maximum address range of the 6502
 }
@@ -24,9 +22,9 @@ impl Interface6502 for Ram {
     }
 }
 
-pub fn load() -> (MOS6502, Ram) {
+pub fn load(prg: &[u8]) -> (MOS6502, Ram) {
     let mut ram = Ram{ ram: Box::new([0; u16::max_value() as usize + 1]) };
-    ram.load_program(0x0, &PRG.to_vec());
+    ram.load_program(0x0, &prg.to_vec());
 
     let mut cpu = MOS6502::new();
     cpu.set_program_counter(0x0400);
