@@ -13,12 +13,6 @@ set_seed_input    := $0037
 nextPiece = $00BF
 iterations = $ef
 
-.repeat $400
-    .byte $00
-.endrep
-
-; rng_seed = 0x8988
-
         lda set_seed_input
         sta set_seed
         lda set_seed_input+1

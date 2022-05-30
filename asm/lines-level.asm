@@ -3,10 +3,6 @@
 
 .segment    "PRG_chunk1": absolute
 
-.repeat $400
-    .byte $00
-.endrep
-
 lines := $10
 levelNumber := $F
 generalCounter2 := $20

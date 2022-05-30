@@ -21,7 +21,7 @@ impl GymSPS {
         self.ram.write(0x19, 0); // spawnID
         self.ram.write(0xBF, 0); // nextPiece
         self.ram.write(0xEF, 0); // iter
-        self.cpu.set_program_counter(0x0400);
+        self.cpu.set_program_counter(0x8000);
     }
 
     pub fn set_input(&mut self, a: u8, b: u8, c: u8) {
@@ -46,9 +46,9 @@ impl GymSPS {
     pub fn print_start_repeats(&mut self, piece: Block) {
         let mut highest = 0;
 
-        for i in 0..255 {
-            for j in 0..255 {
-                for k in 0..255 {
+        for i in 0..=255 {
+            for j in 0..=255 {
+                for k in 0..=255 {
                     self.reset();
                     self.set_input(i, j, k);
 

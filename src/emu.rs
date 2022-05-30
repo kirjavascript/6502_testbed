@@ -27,7 +27,7 @@ pub fn load(prg: &[u8]) -> (MOS6502, Ram) {
     ram.load_program(0x0, &prg.to_vec());
 
     let mut cpu = MOS6502::new();
-    cpu.set_program_counter(0x0400);
+    cpu.set_program_counter(0x8000);
 
     (cpu, ram)
 }
