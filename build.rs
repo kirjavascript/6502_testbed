@@ -5,6 +5,7 @@ fn main() {
 
     for name in [
         "lines-level",
+        "gym-sps",
     ] {
         let ca65 = Command::new("ca65").args(&[
             "-l", &format!("bin/{}.lst", name),
