@@ -76,3 +76,41 @@ pub fn generate_blocks(seed: usize, spawn_count: usize, quantity: usize) -> Vec<
 
     blocks
 }
+
+    // use emulator_6502::Interface6502;
+    // use std::collections::HashMap;
+
+
+    // let (mut cpu, mut ram) = emu::load();
+    // ram.write(0x17, 0x89);
+    // ram.write(0x18, 0x88);
+    // let mut count = 0;
+    // let mut last_iter = 0;
+    // let mut map = HashMap::new();
+
+    // loop {
+    //     cpu.execute_instruction(&mut ram);
+
+    //     let iter = ram.read(0xEF);
+
+    //     if iter != last_iter {
+    //         last_iter = iter;
+
+    //             count += 1;
+    //             let value = ram.read(0xAB);
+
+    //             if map.contains_key(&value) {
+    //                 let mapv = map.get_mut(&value).unwrap();
+    //                 *mapv += 1;
+    //             } else {
+    //                 map.insert(value, 1);
+    //             }
+
+    //     }
+
+
+    //     if count > 1000 {
+    //         break;
+    //     }
+    // }
+    // println!("{:#?}", map);

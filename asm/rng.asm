@@ -8,24 +8,40 @@ nextPiece = $00BF
 iterations = $EF
 
 ; rng_seed = 0x8988
-; spawnCount = 0
-; nextPiece = 0
+; spawnCount = 07
 
-; run generateNextPseudorandomNumber and pickRandomTetrimino 81 times
+; pause, run generateNextPseudorandomNumber 16844 times
 
 ; 0x17: 4C
 ; 0x18: 00
-; 0x19: 0e
+; 0x19: 07
 
 
 mainLoop:
-
-        ldx #$17
+        ldx #rng_seed
         ldy #$02
         jsr generateNextPseudorandomNumber
+        ldx #rng_seed
+        ldy #$02
+        jsr generateNextPseudorandomNumber
+        ldx #rng_seed
+        ldy #$02
+        jsr generateNextPseudorandomNumber
+        ldx #rng_seed
+        ldy #$02
+        jsr generateNextPseudorandomNumber
+        lda rng_seed
+        and #$0F
+        cmp #$0A
+        bpl mainLoop
+        sta $AB
 
-        jsr pickRandomTetrimino
-        sta nextPiece
+
+        ; ldx #$17
+        ; ldy #$02
+        ; jsr generateNextPseudorandomNumber
+        ; jsr pickRandomTetrimino
+        ; sta nextPiece
         inc iterations
         jmp mainLoop
 
