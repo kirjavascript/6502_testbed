@@ -89,7 +89,7 @@ impl GymSPS {
                     }
                 }
             }
-            println!("progress: {:#?}/255", i);
+            println!("{}/255", i);
         }
     }
 

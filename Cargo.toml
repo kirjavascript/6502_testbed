@@ -1,5 +1,5 @@
 [package]
-name = "emulate"
+name = "ntools"
 version = "0.1.0"
 authors = ["kirjavascript <snkenjoi@gmail.com>"]
 edition = "2018"
