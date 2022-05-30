@@ -1,11 +1,12 @@
 fn main() {
     let handle = |out: std::process::Output| {
-        if out.stderr.len() > 0 {
-            println!("cargo:warning={:?}", String::from_utf8_lossy(&out.stderr));
+        if !out.stderr.is_empty() {
+            String::from_utf8_lossy(&out.stderr).split('\n')
+                .for_each(|line| if !line.is_empty() { println!("cargo:warning={:?}", line)});
         }
-
-        if out.stdout.len() > 0 {
-            println!("cargo:warning={:?}", String::from_utf8_lossy(&out.stdout));
+        if !out.stdout.is_empty() {
+            String::from_utf8_lossy(&out.stdout).split('\n')
+                .for_each(|line| if !line.is_empty() { println!("cargo:warning={:?}", line)});
         }
     };
 

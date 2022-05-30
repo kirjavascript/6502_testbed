@@ -5,7 +5,7 @@ pub struct Ram {
 }
 
 impl Ram {
-    pub fn load_program(&mut self, start: usize, data: &Vec<u8>){
+    pub fn load_program(&mut self, start: usize, data: &[u8]){
         for (i, value) in data.iter().enumerate() {
             self.ram[start + i] = *value;
         }
