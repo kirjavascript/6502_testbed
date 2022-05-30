@@ -13,11 +13,6 @@ fn main() {
 
     let mut sps = gym_sps::GymSPS::new();
 
-    sps.set_input(0x12, 0x34, 0x0);
-
-    println!("{:?}", sps.next());
-    println!("{:?}", sps.next());
-    println!("{:?}", sps.next());
-    println!("{:?}", sps.next());
+    sps.print_start_repeats(gym_sps::Block::I);
 
 }

@@ -36,10 +36,11 @@ impl GymSPS {
         }
     }
 
-    pub fn _reset(&mut self) {
+    pub fn reset(&mut self) {
         self.ram.write(0x19, 0); // spawnID
         self.ram.write(0xBF, 0); // nextPiece
         self.ram.write(0xEF, 0); // iter
+        self.cpu.set_program_counter(0x0400);
     }
 
     pub fn set_input(&mut self, a: u8, b: u8, c: u8) {
@@ -57,6 +58,36 @@ impl GymSPS {
             if iter != self.last_iter {
                 self.last_iter = iter;
                 return Block::from(self.ram.read(0x19));
+            }
+        }
+    }
+
+    pub fn print_start_repeats(&mut self, piece: Block) {
+        let mut highest = 0;
+
+        for i in 0..255 {
+            for j in 0..255 {
+                for k in 0..255 {
+                    self.reset();
+                    self.set_input(i, j, k);
+
+                    let mut streak = 0;
+                    while self.next() == piece {
+                        streak += 1;
+                    }
+
+                    if streak > highest {
+                        println!(
+                            "{} {:?} pieces @ {:02x}{:02x}{:02x}",
+                            streak,
+                            piece,
+                            i,
+                            j,
+                            k,
+                        );
+                        highest = streak;
+                    }
+                }
             }
         }
     }
