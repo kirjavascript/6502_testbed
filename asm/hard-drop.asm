@@ -12,7 +12,7 @@ lineOffset := $624 ; hard drop
 playfield   := $0400
 
 harddropBuffer := $500
-harddropAddr := $10 ; 4 bytes (tmp3?)
+harddropAddr := $10
 
 EMPTY_TILE := $EF
 
@@ -51,9 +51,6 @@ harddrop_tetrimino:
         ;     clearRow(i)
         ; }
 
-; TODO: check clearing zero
-; TODO: check split
-
 
         lda #$04
         sta harddropAddr+1
@@ -64,10 +61,9 @@ harddropMarkCleared:
         lda #19
         sta tmpY ; row
 @lineLoop:
+        ; A should always be tmpY
 
-        ; TODO: remove mul by 10
-
-        ldx tmpY
+        tax
         lda multBy10Table, x
         sta harddropAddr
 
@@ -89,7 +85,7 @@ harddropMarkCleared:
 @noLineClear:
         lda #0
 @write:
-        ldx tmpY
+        ; X should be tmpY
         sta harddropBuffer, x
 
         dec tmpY
@@ -123,11 +119,9 @@ harddropShift:
         dex
 
         lda harddropBuffer, x
-        bne @fullLine
-
-@emptyLine:
+        bne @lineIsFull
         dec completedLinesCopy
-@fullLine:
+@lineIsFull:
         inc lineOffset
 
         lda completedLinesCopy
@@ -135,8 +129,6 @@ harddropShift:
 
         lda lineOffset
         beq @nextLine
-
-        ; TODO: just one mul by 10 needed
 
         tax
         lda multBy10Table, x
@@ -161,11 +153,11 @@ harddropShift:
 @nextLine:
         dec tmpY
         lda tmpY
-        cmp #0
         beq @addScore
         jmp @lineLoop
 
 @addScore:
+
         lda #EMPTY_TILE
         ldx #0
 @topRowLoop:

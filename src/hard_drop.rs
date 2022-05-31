@@ -52,6 +52,8 @@ pub fn print() {
         playfield::set(&mut ram, 6, 0, 0x7b);
         playfield::set(&mut ram, 7, 1, 0x7b);
         playfield::set(&mut ram, 8, 2, 0x7b);
+        playfield::set(&mut ram, 9, 3, 0x7b);
+        playfield::set(&mut ram, 0, 5, 0x7b);
 
         playfield::print(&mut ram);
 
