@@ -12,6 +12,7 @@ lineOffset := $624 ; hard drop
 playfield   := $0400
 
 harddropBuffer := $500
+harddropAddr := $10
 
 EMPTY_TILE := $EF
 
@@ -52,6 +53,12 @@ harddrop_tetrimino:
 
 ; TODO: check clearing zero
 ; TODO: check split
+
+
+        lda #$04
+        sta harddropAddr+1
+        lda #$04
+        sta harddropAddr+3
 
 harddropMarkCleared:
         lda #19
@@ -132,27 +139,48 @@ harddropShift:
         lda multBy10Table, x
         sta lineOffset ; reuse for lineOffset * 10
 
-        ; loop*10
-        ldy #0
+
+
         ldx tmpY
         lda multBy10Table, x
-        sta tmpX
+        sta harddropAddr+0
         sec
         sbc lineOffset
-        sta tmpZ
+        sta harddropAddr+2
 
+        ldx #0
+        ldy #0
 @shiftLineLoop:
+        lda (harddropAddr+2), y
+        sta (harddropAddr), y
 
-        ldx tmpZ
-        lda playfield, x
-        ldx tmpX
-        sta playfield, x
-
-        inc tmpX
-        inc tmpZ
+        inx
         iny
-        cpy #$A
+        cpx #$A
         bne @shiftLineLoop
+
+
+        ; loop*10
+        ; ldy #0
+        ; ldx tmpY
+        ; lda multBy10Table, x
+        ; sta tmpX
+        ; sec
+        ; sbc lineOffset
+        ; sta tmpZ
+
+; @shiftLineLoop:
+
+        ; ldx tmpZ
+        ; lda playfield, x
+        ; ldx tmpX
+        ; sta playfield, x
+
+        ; inc tmpX
+        ; inc tmpZ
+        ; iny
+        ; cpy #$A
+        ; bne @shiftLineLoop
 
 @nextLine:
         dec tmpY
