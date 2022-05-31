@@ -102,7 +102,9 @@ harddropMarkCleared:
         bne @lineLoop
 
 harddropShift:
-        lda #19
+        clc
+        lda tetriminoY
+        adc #1
         sta tmpY ; row
 @lineLoop:
         ; A should always be tmpY
