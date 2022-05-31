@@ -6,8 +6,9 @@
 tmpX        := $0003
 tmpY        := $0004
 tmpZ        := $0005
-completedLinesCopy := $623 ; hard drop
+tetriminoY  := $0041
 completedLines  := $0056
+completedLinesCopy := $623 ; hard drop
 lineOffset := $624 ; hard drop
 playfield   := $0400
 
@@ -51,14 +52,17 @@ harddrop_tetrimino:
         ;     clearRow(i)
         ; }
 
+        lda #18
+        sta tetriminoY
 
         lda #$04
         sta harddropAddr+1
-        lda #$04
         sta harddropAddr+3
 
 harddropMarkCleared:
-        lda #19
+        clc
+        lda tetriminoY
+        adc #1
         sta tmpY ; row
 @lineLoop:
         ; A should always be tmpY
@@ -90,6 +94,7 @@ harddropMarkCleared:
 
         dec tmpY
         lda tmpY
+        cmp #4
         bpl @lineLoop
 
 harddropShift:

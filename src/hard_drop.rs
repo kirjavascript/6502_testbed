@@ -19,10 +19,14 @@ mod playfield {
             print!("\n");
         }
     }
-
     pub fn set(ram: &mut crate::emu::Ram, x: u16, y: u16, value: u8) {
         let index = ((y * 10) + x) + 0x400;
         ram.write(index, value);
+    }
+    pub fn fill_line(ram: &mut crate::emu::Ram, y: u16) {
+        for x in 0..10 {
+            self::set(ram, x, y, 0x7b);
+        }
     }
 }
 
@@ -32,19 +36,11 @@ pub fn print() {
 
         let (mut cpu, mut ram) = emu::load(include_bytes!("../bin/hard-drop.nes"));
 
-
         playfield::clear(&mut ram);
-
-        // for y in 0..4 {
-        //     for x in 0..10 {
-        //         playfield::set(&mut ram, x, y, 0x7b);
-        //     }
-        // }
+        // playfield::fill_line(&mut ram, 0);
 
         for y in 16..20 {
-            for x in 0..10 {
-                playfield::set(&mut ram, x, y, 0x7b);
-            }
+            playfield::fill_line(&mut ram, y);
         }
 
         playfield::set(&mut ram, 4, 13, 0x7b);
