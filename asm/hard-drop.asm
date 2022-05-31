@@ -60,9 +60,12 @@ harddrop_tetrimino:
         sta harddropAddr+3
 
 harddropMarkCleared:
-        clc
+        sec
         lda tetriminoY
-        adc #1
+        sbc #3
+        sta tmpX
+        clc
+        adc #4
         sta tmpY ; row
 @lineLoop:
         ; A should always be tmpY
@@ -94,10 +97,6 @@ harddropMarkCleared:
 
         dec tmpY
 
-        sec
-        lda tetriminoY
-        sbc #3
-        sta tmpX
         lda tmpY
         cmp tmpX
         bne @lineLoop
