@@ -50,6 +50,23 @@ pub fn print() {
         playfield::set(&mut ram, 8, 2, 0x7b);
         playfield::set(&mut ram, 9, 3, 0x7b);
         playfield::set(&mut ram, 0, 5, 0x7b);
+        playfield::set(&mut ram, 0, 15, 0x7b);
+        playfield::set(&mut ram, 1, 15, 0x7b);
+        playfield::set(&mut ram, 2, 15, 0x7b);
+        playfield::set(&mut ram, 3, 15, 0x7b);
+        playfield::set(&mut ram, 4, 15, 0x7b);
+
+        playfield::set(&mut ram, 0, 14, 0x7b);
+        playfield::set(&mut ram, 1, 14, 0x7b);
+        playfield::set(&mut ram, 2, 14, 0x7b);
+        playfield::set(&mut ram, 3, 14, 0x7b);
+        playfield::set(&mut ram, 4, 14, 0x7b);
+
+        playfield::set(&mut ram, 0, 14, 0x7b);
+        playfield::set(&mut ram, 1, 14, 0x7b);
+        playfield::set(&mut ram, 2, 14, 0x7b);
+        playfield::set(&mut ram, 3, 14, 0x7b);
+        playfield::set(&mut ram, 4, 14, 0x7b);
 
         playfield::print(&mut ram);
 
@@ -68,7 +85,7 @@ pub fn print() {
                 }
                 print!("\n");
 
-                println!("{}", ram.read(0x10));
+                println!("{}", ram.read(0x20));
                 break;
             }
         }

@@ -93,9 +93,14 @@ harddropMarkCleared:
         sta harddropBuffer, x
 
         dec tmpY
+
+        sec
+        lda tetriminoY
+        sbc #3
+        sta tmpX
         lda tmpY
-        cmp #4
-        bpl @lineLoop
+        cmp tmpX
+        bne @lineLoop
 
 harddropShift:
         lda #19
