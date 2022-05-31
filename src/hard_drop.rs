@@ -35,7 +35,7 @@ pub fn print() {
 
         playfield::clear(&mut ram);
 
-        // for y in 1..4 {
+        // for y in 0..4 {
         //     for x in 0..10 {
         //         playfield::set(&mut ram, x, y, 0x7b);
         //     }

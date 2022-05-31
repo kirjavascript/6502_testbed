@@ -12,7 +12,7 @@ lineOffset := $624 ; hard drop
 playfield   := $0400
 
 harddropBuffer := $500
-harddropAddr := $10
+harddropAddr := $10 ; 4 bytes (tmp3?)
 
 EMPTY_TILE := $EF
 
@@ -65,18 +65,19 @@ harddropMarkCleared:
         sta tmpY ; row
 @lineLoop:
 
+        ; TODO: remove mul by 10
+
         ldx tmpY
         lda multBy10Table, x
-        tax
+        sta harddropAddr
 
         ; check for empty row
         ldy #$0
 @minoLoop:
-        lda playfield, x
+        lda (harddropAddr), y
         cmp #EMPTY_TILE
         beq @noLineClear
 
-        inx
         iny
         cpy #$A
         beq @lineClear
@@ -135,6 +136,8 @@ harddropShift:
         lda lineOffset
         beq @nextLine
 
+        ; TODO: just one mul by 10 needed
+
         tax
         lda multBy10Table, x
         sta lineOffset ; reuse for lineOffset * 10
@@ -146,15 +149,13 @@ harddropShift:
         sbc lineOffset
         sta harddropAddr+2
 
-        ldx #0
         ldy #0
 @shiftLineLoop:
         lda (harddropAddr+2), y
         sta (harddropAddr), y
 
-        inx
         iny
-        cpx #$A
+        cpy #$A
         bne @shiftLineLoop
 
 @nextLine:
