@@ -11,6 +11,8 @@ completedLines  := $0056
 lineOffset := $624 ; hard drop
 playfield   := $0400
 
+harddropBuffer := $500
+
 EMPTY_TILE := $EF
 
 marker = $EF
@@ -48,6 +50,10 @@ harddrop_tetrimino:
         ;     clearRow(i)
         ; }
 
+; TODO: check clearing zero
+; TODO: check split
+
+harddropMarkCleared:
         lda #19
         sta tmpY ; row
 @lineLoop:
@@ -70,6 +76,29 @@ harddrop_tetrimino:
         jmp @minoLoop
 
 @lineClear:
+        lda #1
+        jmp @write
+@noLineClear:
+        lda #0
+@write:
+        ldx tmpY
+        sta harddropBuffer, x
+
+        dec tmpY
+        lda tmpY
+        bpl @lineLoop
+
+harddropShift:
+        lda #19
+        sta tmpY ; row
+@lineLoop:
+        ; A should always be tmpY
+
+        tax
+        lda harddropBuffer, x
+        beq @noLineClear
+
+@lineClear:
         inc completedLines
 @noLineClear:
         lda completedLines
@@ -81,35 +110,17 @@ harddrop_tetrimino:
         lda completedLines
         sta completedLinesCopy
 
-        sec
-        txa
-        sbc #20
-        sta tmpZ ; i - 1
-        tax
-
+        ldx tmpY
 @offsetLoop:
-        ; check for empty row
-        ldy #$0
-@offsetCheckLineFull:
-        lda playfield, x
-        cmp #EMPTY_TILE
-        beq @emptyLine
+        dex
 
-        inx
-        iny
-        cpy #$A
-        beq @fullLine
-        jmp @offsetCheckLineFull
+        lda harddropBuffer, x
+        bne @fullLine
 
 @emptyLine:
         dec completedLinesCopy
 @fullLine:
         inc lineOffset
-
-        lda tmpZ
-        sbc #10
-        sta tmpZ
-        tax
 
         lda completedLinesCopy
         bne @offsetLoop
@@ -151,10 +162,131 @@ harddrop_tetrimino:
         jmp @lineLoop
 
 @addScore:
-@ret:
+        lda #EMPTY_TILE
+        ldx #0
+@topRowLoop:
+        sta playfield, x
+        inx
+        cpx #$A
+        bne @topRowLoop
 
-        lda #$EF
+        lda #$FF
         sta marker
+
+        ; lda #19
+        ; sta tmpY ; row
+; @lineLoop:
+
+        ; ldx tmpY
+        ; lda multBy10Table, x
+        ; tax
+
+        ; ; check for empty row
+        ; ldy #$0
+; @minoLoop:
+        ; lda playfield, x
+        ; cmp #EMPTY_TILE
+        ; beq @noLineClear
+
+        ; inx
+        ; iny
+        ; cpy #$A
+        ; beq @lineClear
+        ; jmp @minoLoop
+
+; @lineClear:
+        ; inc completedLines
+; @noLineClear:
+        ; lda completedLines
+        ; beq @nextLine
+
+        ; ; get line offset
+        ; lda #0
+        ; sta lineOffset
+        ; lda completedLines
+        ; sta completedLinesCopy
+
+        ; sec
+        ; txa
+        ; sbc #20
+        ; sta tmpZ ; i - 1
+        ; tax
+
+; @offsetLoop:
+        ; ; check for empty row
+        ; ldy #$0
+; @offsetCheckLineFull:
+        ; lda playfield, x
+        ; cmp #EMPTY_TILE
+        ; beq @emptyLine
+
+        ; inx
+        ; iny
+        ; cpy #$A
+        ; beq @fullLine
+        ; jmp @offsetCheckLineFull
+
+; @emptyLine:
+        ; dec completedLinesCopy
+; @fullLine:
+        ; inc lineOffset
+
+        ; lda tmpZ
+        ; sbc #10
+        ; sta tmpZ
+        ; tax
+
+        ; lda completedLinesCopy
+        ; bne @offsetLoop
+
+        ; lda lineOffset
+        ; beq @nextLine
+
+        ; tax
+        ; lda multBy10Table, x
+        ; sta lineOffset ; reuse for lineOffset * 10
+
+        ; ; loop*10
+        ; ldy #0
+        ; ldx tmpY
+        ; lda multBy10Table, x
+        ; sta tmpX
+        ; sec
+        ; sbc lineOffset
+        ; sta tmpZ
+
+; @shiftLineLoop:
+
+        ; ldx tmpZ
+        ; lda playfield, x
+        ; ldx tmpX
+        ; sta playfield, x
+
+        ; inc tmpX
+        ; inc tmpZ
+        ; iny
+        ; cpy #$A
+        ; bne @shiftLineLoop
+
+; @nextLine:
+        ; dec tmpY
+        ; lda tmpY
+        ; cmp #0
+        ; beq @addScore
+        ; jmp @lineLoop
+
+; @addScore:
+
+        ; lda #EMPTY_TILE
+        ; ldx #0
+; @topRowLoop:
+        ; sta playfield, x
+        ; inx
+        ; cpx #$A
+        ; bne @topRowLoop
+
+        ; lda #$FF
+        ; sta marker
 
 multBy10Table:
         .byte   $00,$0A,$14,$1E,$28,$32,$3C,$46
