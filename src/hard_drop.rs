@@ -28,6 +28,13 @@ mod playfield {
             self::set(ram, x, y, 0x7b);
         }
     }
+    pub fn set_str(ram: &mut crate::emu::Ram, playfield: &str) {
+        playfield.trim_start_matches('\n').split("\n").enumerate().for_each(|(y, line)| {
+            line.chars().enumerate().for_each(|(x, ch)| {
+                self::set(ram, x as _, y as _, if ch == '#' { 0x7b } else { 0xef });
+            });
+        });
+    }
 }
 
 pub fn print() {
@@ -37,33 +44,51 @@ pub fn print() {
         let (mut cpu, mut ram) = emu::load(include_bytes!("../bin/hard-drop.nes"));
 
         playfield::clear(&mut ram);
-        // playfield::fill_line(&mut ram, 0);
 
-        for y in 16..20 {
-            playfield::fill_line(&mut ram, y);
-        }
+        playfield::set_str(&mut ram, r##"
+      #
+       #
+        #
+         #
 
-        playfield::set(&mut ram, 4, 13, 0x7b);
-        playfield::set(&mut ram, 2, 15, 0x7b);
-        playfield::set(&mut ram, 6, 0, 0x7b);
-        playfield::set(&mut ram, 7, 1, 0x7b);
-        playfield::set(&mut ram, 8, 2, 0x7b);
-        playfield::set(&mut ram, 9, 3, 0x7b);
-        playfield::set(&mut ram, 0, 5, 0x7b);
-        playfield::set(&mut ram, 0, 15, 0x7b);
-        playfield::set(&mut ram, 1, 15, 0x7b);
-        playfield::set(&mut ram, 2, 15, 0x7b);
-        playfield::set(&mut ram, 3, 15, 0x7b);
-        playfield::set(&mut ram, 4, 15, 0x7b);
+#
 
-        playfield::set(&mut ram, 0, 14, 0x7b);
-        playfield::set(&mut ram, 1, 14, 0x7b);
-        playfield::set(&mut ram, 2, 14, 0x7b);
-        playfield::set(&mut ram, 3, 14, 0x7b);
 
-        playfield::set(&mut ram, 0, 13, 0x7b);
-        playfield::set(&mut ram, 1, 13, 0x7b);
-        playfield::set(&mut ram, 2, 13, 0x7b);
+
+
+
+
+
+### #
+####
+#####
+##########
+##########
+##########
+##########"##);
+
+
+        playfield::set_str(&mut ram, r##"
+#
+
+
+
+
+
+
+
+
+
+
+ #   #
+## ###
+## #####
+#########
+#########
+##########
+##########
+##########
+##########"##);
 
         playfield::print(&mut ram);
 
