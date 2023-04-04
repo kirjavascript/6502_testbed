@@ -1,3 +1,6 @@
+; Original version of playState_checkForCompletedRows:
+; https://github.com/CelestialAmber/TetrisNESDisasm/blob/master/main.asm#L3063
+
         .setcpu "6502"
 
 

@@ -1,3 +1,6 @@
+; Original version of playState_checkForCompletedRows with single modification to check all 4 rows:
+; https://github.com/CelestialAmber/TetrisNESDisasm/blob/master/main.asm#L3063    
+   
         .setcpu "6502"
 
 
@@ -92,7 +95,7 @@ playState_checkForCompletedRows:
         inc     lineIndex
         lda     lineIndex
         cmp     #$04
-        bmi     @updatePlayfieldComplete
+        bmi     @updatePlayfieldComplete      ; Modified from @ret
         ldy     completedLines
         lda     garbageLines,y
         clc

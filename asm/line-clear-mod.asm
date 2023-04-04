@@ -1,3 +1,6 @@
+; Modified version of playState_checkForCompletedRows that checks all 4 rows without crashing:
+; https://github.com/zohassadar/TetrisNESDisasm/blob/single_frame_linecheck/main.asm#L3063
+
         .setcpu "6502"
 
 
