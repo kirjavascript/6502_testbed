@@ -14,6 +14,9 @@ fn main() {
         "lines-level",
         "gym-sps",
         "hard-drop",
+        "line-clear",
+        "line-clear-crash",
+        "line-clear-mod",
     ] {
         let ca65 = std::process::Command::new("ca65").args(&[
             "-l", &format!("bin/{}.lst", name),
